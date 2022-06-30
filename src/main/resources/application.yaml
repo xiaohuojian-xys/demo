@@ -1,0 +1,5 @@
+spring:
+  config:
+    location: E:\info.yaml
+config:
+  path: E:\info.yaml
