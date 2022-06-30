@@ -1,6 +1,9 @@
 package com.example.demo.util;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.util.ResourceUtils;
+import org.yaml.snakeyaml.Yaml;
 import oshi.SystemInfo;
 import oshi.hardware.CentralProcessor;
 import oshi.hardware.GlobalMemory;
@@ -9,12 +12,18 @@ import oshi.software.os.FileSystem;
 import oshi.software.os.OSFileStore;
 import oshi.software.os.OperatingSystem;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.Inet4Address;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.text.DecimalFormat;
 import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 @Slf4j
@@ -144,4 +153,5 @@ public class SystemUtil {
         double tbNumber = gbNumber / FORMAT;
         return new DecimalFormat("#.##TB").format(tbNumber);
     }
+
 }

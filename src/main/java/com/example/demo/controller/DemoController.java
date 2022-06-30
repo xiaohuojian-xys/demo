@@ -1,42 +1,43 @@
 package com.example.demo.controller;
 
 import com.example.demo.util.SystemUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.yaml.snakeyaml.Yaml;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 
 @RestController
-@PropertySource(value = {"file:${config.path}"}, encoding="utf-8")
+@Slf4j
 public class DemoController {
 
-    @Value("${hostname}")
-    private String hostname;
-    @Value("${cpu}")
-    private String cpu;
-    @Value("${mem}")
-    private String mem;
-    @Value("${disk}")
-    private String disk;
-    private static Map<String, String> usage = new HashMap<String, String>();
+    @Value("${config.path}")
+    private String file_path;
 
-    @GetMapping("/info")
-    public Map<String, String> info(){
-        Map<String, String> map = new HashMap<>();
-        map.put("cpu", SystemUtil.getCPUUtilization());
-        map.put("mem", SystemUtil.getMemUtilization());
-        map.put("dist", SystemUtil.getDiskUtilization());
-        map.put("ip", SystemUtil.getIpAddress());
-        return map;
-    }
+//    private static Map<String, String> usage = new HashMap<String, String>();
 
-    @GetMapping("/getInfo")
-    public Map<String, String> getInfo(){
-        return usage;
-    }
+//    @GetMapping("/info")
+//    public Map<String, String> info(){
+//        Map<String, String> map = new HashMap<>();
+//        map.put("cpu", SystemUtil.getCPUUtilization());
+//        map.put("mem", SystemUtil.getMemUtilization());
+//        map.put("dist", SystemUtil.getDiskUtilization());
+//        map.put("ip", SystemUtil.getIpAddress());
+//        return map;
+//    }
+
+//    @GetMapping("/getInfo")
+//    public Map<String, String> getInfo(){
+//        return usage;
+//    }
 
 //    @PostMapping("/setSysInfo")
 //    public void setSysInfo(@RequestBody Map<String, String> map){
@@ -52,10 +53,15 @@ public class DemoController {
 
     @GetMapping("/getSysInfo")
     public Map<String, String> getSysInfo(){
-        usage.put("hostname", hostname);
-        usage.put("cpu", cpu);
-        usage.put("mem", mem);
-        usage.put("disk", disk);
-        return usage;
+        InputStream inputStream = null;
+        try {
+            inputStream = new FileInputStream(new File(file_path));
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        Yaml yaml = new Yaml();
+        Map<String, String> data = yaml.load(inputStream);
+        System.out.println(data);
+        return data;
     }
 }
