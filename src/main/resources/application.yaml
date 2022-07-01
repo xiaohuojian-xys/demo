@@ -1,2 +1,6 @@
 config:
   path: E:\info.yaml
+service:
+  schema: http://
+  name: localhost:8081
+updateCorn: "0/10 * * * * ?"
